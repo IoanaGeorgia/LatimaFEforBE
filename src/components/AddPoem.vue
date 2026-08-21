@@ -1,15 +1,19 @@
 <script setup lang="ts">
-// @ts-nocheck
-import { usePoemStore, useCategoriesStore } from '@/stores/poems'
+import { useCategoriesStore } from '@/stores/poems'
 import { ref, reactive } from 'vue'
 import TopRead from './TopRead.vue'
 import Loader from './Loader.vue'
 
 defineProps<{}>()
 
-const categoriesStore = useCategoriesStore()
-const categories = categoriesStore.categories
+interface Category {
+  id: string | number
+  name: string
+  symbol: string
+}
 
+const categoriesStore = useCategoriesStore()
+const categories = categoriesStore.categories as unknown as Category[]
 
 let poem = ref({
   title: '',
@@ -77,14 +81,17 @@ const validateForm = (): boolean => {
   return isValid
 }
 
-const autoResize = (event: any) => {
-  const el = event.target
-  el.style.height = 'auto'
-  el.style.height = el.scrollHeight + 'px'
+const autoResize = (event: Event) => {
+  const el = event.target as HTMLTextAreaElement
+  if (el) {
+    el.style.height = 'auto'
+    el.style.height = el.scrollHeight + 'px'
+  }
 }
 
-const addTags = (event: any) => {
-  const val = event.target.value.trim()
+const addTags = (event: KeyboardEvent) => {
+  const target = event.target as HTMLInputElement
+  const val = target?.value.trim()
   if (val && val.length > 2) {
     if (poem.value.tags.length >= 10) {
       errors.tags = 'Maximum of 10 tags allowed.'
@@ -93,8 +100,8 @@ const addTags = (event: any) => {
     let tempSet = new Set(poem.value.tags)
     tempSet.add(val)
     poem.value.tags = [...tempSet]
-    event.target.value = ''
-    errors.tags = '' 
+    target.value = ''
+    errors.tags = ''
   }
 }
 
@@ -128,13 +135,13 @@ const selectCategory = (name: string | undefined) => {
 
 const deleteCat = (name: string | undefined) => {
   if (name) {
-    poem.value.categories = poem.value.categories.filter((cat) => cat !== name)
+    poem.value.categories = poem.value.categories.filter((cat: string) => cat !== name)
   }
 }
 
 const deleteTag = (name: string | undefined) => {
   if (name) {
-    poem.value.tags = poem.value.tags.filter((tag) => tag !== name)
+    poem.value.tags = poem.value.tags.filter((tag: string) => tag !== name)
   }
 }
 
@@ -169,10 +176,11 @@ const submitForm = async () => {
   }
 }
 
+
 function getCategorySymbol(categoryName: string) {
-  if (!categories?.value) return ''
-  const found = categories.value.find(
-    (cat) => cat.name.toLowerCase() === categoryName?.toLowerCase()
+  if (!categories || !Array.isArray(categories)) return ''
+  const found = categories.find(
+    (cat: Category) => cat.name.toLowerCase() === categoryName?.toLowerCase()
   )
   return found ? found.symbol : ''
 }
@@ -280,7 +288,7 @@ function getCategorySymbol(categoryName: string) {
             :class="{ 'has-error': errors.tags }"
             placeholder="Type tag and press Enter"
           />
-          <div  v-if="poem.tags.length > 0" class="input tags">
+          <div v-if="poem.tags.length > 0" class="input tags">
             <div class="tag" v-for="tag in poem.tags.slice(0, 10)" :key="tag">
               #{{ tag }}
               <button type="button" class="close-tag" @click="deleteTag(tag)">×</button>
