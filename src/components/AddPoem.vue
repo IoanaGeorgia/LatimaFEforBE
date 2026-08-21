@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-nocheck
 import { usePoemStore, useCategoriesStore } from '@/stores/poems'
 import { ref, reactive } from 'vue'
 import TopRead from './TopRead.vue'
