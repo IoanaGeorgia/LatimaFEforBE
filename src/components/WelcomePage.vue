@@ -19,24 +19,24 @@ const scrollToAbout = () => {
 <template>
   <div class="page-wrapper">
     <div class="welcome-wrapper">
-      <p>Welcome to l<span>ati</span>ma</p>
-      <button @click="scrollToAbout">Learn more</button>
+      <p class="highlight">Welcome to l<span>ati</span>ma</p>
+      <button @click="scrollToAbout" class="reverse">Learn more</button>
     </div>
 
     <div id="about" class="about-wrapper">
       <div class="wrapper">
         <div class="texts">
-          <p class="title">P<span class="reverse">oe</span>ms</p>
+          <p class="title highlight">P<span class="reverse">oe</span>ms</p>
           <p>A place for poem lovers to discover other poems or read poems from all over the world</p>
         </div>
-        <div class="decoration">🖋</div>
+        <div class="decoration"></div>
       </div>
     </div>
 
     <div class="how-wrapper">
       <div class="wrapper">
-        <p class="title">
-          How it <span>wor</span>ks
+        <p class="title highlight">
+          How it works
         </p>
 
         <p class="subtitle-text">
@@ -47,10 +47,10 @@ const scrollToAbout = () => {
 
         <div class="list-wrapper">
           <div>
-            <h3>Rea<span>di</span>ng</h3>
+            <h3 class="small-highlight">Reading</h3>
             <ul>
               <li>
-                Dive into a rich, ever-exp<span>andi</span>ng tapestry of voices spanning continents, cultures, and
+                Dive into a rich, ever-expanding tapestry of voices spanning continents, cultures, and
                 traditions. From traditional haikus and structured sonnets to raw, modern free verse, our curated
                 collections bring together the finest poetic perspectives from around the globe. Every tap uncovers a
                 new worldview, letting you wander through oceans of rhythm, metaphor, and shared human experience
@@ -62,24 +62,17 @@ const scrollToAbout = () => {
                 you the moment it’s written. Never lose track of a captivating story arc or a writer’s evolving style,
                 and watch their creative journey unfold in real-time.
               </li>
-              <li>
-                Experience the collective heartbeat of our community by exploring what readers are currently loving.
-                Discover trending poems that are sparking conversations, evoking deep emotions, and capturing the spirit
-                of the moment. See which stanzas are receiving love, bookmark popular pieces for quiet moments, and join
-                a vibrant global discussion built entirely around the power of language.
-              </li>
+
             </ul>
           </div>
 
           <div>
-            <h3>Writing</h3>
+            <h3 class="small-highlight">Writing</h3>
             <ul>
               <li>
                 Transform your raw thoughts into beautifully formatted verse with an effortless, distraction-free
                 writing environment. Our clean, modern canvas is designed to respect your visual layout—ensuring that
-                every line break, stanza separation, and stylistic choice displays exactly as you envisioned. Sharing
-                your voice with the world takes just seconds, leaving you free to focus entirely on the craft of
-                writing.
+                every line break, stanza separation, and stylistic choice displays exactly as you envisioned.
               </li>
               <li>
                 Step into an encouraging and passionate community that values the vulnerability of creative writing.
@@ -87,12 +80,7 @@ const scrollToAbout = () => {
                 Receive thoughtful feedback, constructive engagement, and heartfelt enc<span>ouragement th</span>at
                 inspires you to keep sharpening your pen and honing your voice.
               </li>
-              <li>
-                Watch your artistry grow over time with a dedicated personal repository for all your work. Organize your
-                poems into custom digital chapbooks, sav<span>e private drafts for later, and refl</span>ect on past
-                entries to see how your voice has evolved. Your profile becomes an elegant, living portfolio—a lasting
-                archive of every emotion, story, and stanza you’ve given to the world.
-              </li>
+             
             </ul>
           </div>
         </div>
@@ -102,7 +90,7 @@ const scrollToAbout = () => {
     <div class="community-wrapper">
       <div class="wrapper">
         <div class="texts">
-          <p class="title">A com<span class="reverse">munit</span>y</p>
+          <p class="title highlight">A community</p>
           <p>People all over the world can submit poems and hace access to others.</p>
           <p>This is a place to connect and show people what they feel has been felt by people all over the world, for
             ages.</p>
@@ -110,7 +98,7 @@ const scrollToAbout = () => {
             <button class="reverse">Write a poem</button>
           </RouterLink>
         </div>
-        <div class="decoration">⋆˙⟡</div>
+        <div class="decoration"></div>
       </div>
     </div>
 
@@ -124,6 +112,7 @@ const scrollToAbout = () => {
 .welcome-wrapper p {
   font-size: 10vw;
   text-align: center;
+  color:#FFF;
 }
 
 .welcome-wrapper {
@@ -143,11 +132,10 @@ const scrollToAbout = () => {
 
 .about-wrapper {
   min-height: 500px;
-  background-color: var(--defaultDark);
-  color: var(--defaultLight);
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
 
 .about-wrapper .wrapper {
@@ -157,8 +145,16 @@ const scrollToAbout = () => {
   justify-content: space-between;
   align-items: center;
   margin: auto;
-  color: var(--defaultLight);
+  color:var(--defaultDark);
   gap: var(--defaultSmallPadding);
+}
+
+.about-wrapper .wrapper .title{
+  color:var(--defaultLight);
+}
+
+.about-wrapper .wrapper p{
+  max-width:500px;
 }
 
 @media(max-width:560px) {
@@ -172,9 +168,6 @@ const scrollToAbout = () => {
   width: 100%;
 }
 
-.how-wrapper {
-  background-color: #FFF;
-}
 
 .how-wrapper .wrapper>p {
   max-width: var(--textsSmallDiv);
@@ -195,6 +188,15 @@ const scrollToAbout = () => {
   padding: var(--defaultPagePadding)
 }
 
+.how-wrapper .wrapper .title,
+.how-wrapper .wrapper h3{
+  color:var(--defaultLight);
+}
+
+.how-wrapper .wrapper h3{
+  font-weight:bolder;
+}
+
 .how-wrapper .list-wrapper {
   width: 100%;
   max-width: var(--textsSmallDiv);
@@ -210,8 +212,7 @@ const scrollToAbout = () => {
 
 .community-wrapper {
   min-height: 500px;
-  background-color: var(--defaultDark);
-  color: var(--defaultLight);
+  color: var(--defaultDark);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -224,8 +225,11 @@ const scrollToAbout = () => {
   justify-content: space-between;
   align-items: center;
   margin: auto;
-  color: var(--defaultLight);
   gap: var(--defaultSmallPadding);
+}
+
+.community-wrapper .wrapper .title{
+  color:var(--defaultLight);
 }
 
 .community-wrapper button {

@@ -79,30 +79,30 @@ const sendSearchDirect = () => {
 
           </button>
         </div>
-        <RouterLink to="/add-poem"> <button class="reverse" aria-label="Add a poem" title="Add a poem">🖍</button>
+        <RouterLink to="/add-poem"> <button class="reverse" aria-label="Add a poem" title="Add a poem">Add poem</button>
         </RouterLink>
         <RouterLink v-if="!isRegister" to="/register"><button class="reverse sign-up" aria-label="Sign up"
             title="Sign up">Sign up</button></RouterLink>
         <RouterLink v-else to="/account"><button class="reverse" aria-label="Go to account"
-            title="Account">𓍊𓋼𓍊</button></RouterLink>
+            title="Account">Account</button></RouterLink>
 
         <RouterLink to="/poems"> <button class="reverse all-poems" aria-label="See all poems"
-            title="See all poems">🕮</button></RouterLink>
+            title="See all poems">See all</button></RouterLink>
       </div>
 
       <button class="mobileMenu" @click="toggleMobileMenu"> ≡</button>
       <div v-if="isMobileOpen" class="mobile-menu-wrapper">
         <div class="buttons">
 
-          <RouterLink to="/add-poem"> <button class="reverse" aria-label="Add a poem" title="Add a poem">🖍</button>
+          <RouterLink to="/add-poem"> <button class="reverse" aria-label="Add a poem" title="Add a poem">Add poem</button>
           </RouterLink>
           <RouterLink v-if="!isRegister" to="/register"><button class="reverse sign-up" aria-label="Sign up"
               title="Sign up">Sign up</button></RouterLink>
           <RouterLink v-else to="/account"><button class="reverse" aria-label="Go to account"
-              title="Account">𓍊𓋼𓍊</button></RouterLink>
+              title="Account">Account</button></RouterLink>
 
 
-          <RouterLink to="/poems"> <button class="reverse" aria-label="See all poems" title="See all poems">🕮</button>
+          <RouterLink to="/poems"> <button class="reverse" aria-label="See all poems" title="See all poems">All poems</button>
           </RouterLink>
           <div class="search-wrapper">
             <input v-model.trim="searchTerm" type="text" placeholder="Type here to search"
@@ -126,7 +126,7 @@ const sendSearchDirect = () => {
 header {
   width: 100%;
   padding: var(--defaultSmallPadding);
-  z-index: 9999
+  z-index: 9999;
 }
 
 header>div {
@@ -136,6 +136,10 @@ header>div {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: var(--defaultLight);
+  border:1px solid var(--defaultDark);
+  border-radius:50px;
+  padding:5px 20px;
 }
 
 header {
@@ -147,44 +151,35 @@ header .buttons {
   gap: var(--defaultSmallPadding);
 }
 
-header .buttons button.sign-up {
-  font-size: 16px;
-  padding: 2px 15px;
-  height: stretch;
-}
 
 header .logo {
   font-size: 40px;
-  background-color: var(--defaultLight);
 }
 
 header .buttons button {
-  padding: 2px 45px;
-  font-size: 25px;
-  max-width: 123px;
-  width: 100%;
+    padding: 5px 10px;
+    background-color:transparent;
+    color: var(--defaultDark);
+    border:none;
+    transition: var(--transitionTime) all;
+
+
 }
 
 header .buttons button.search-btn {
   max-width: unset;
   width: unset;
-}
-
-header .buttons .search-wrapper button,
-header .buttons button.all-poems {
-  border: none;
-  background-color: var(--defaultLight);
-  color: var(--defaultDark);
-  padding: 5px 15px;
-
-
+  padding-left:5px;
+  padding-right:5px;
 }
 
 
-header .buttons button.all-poems:hover {
-  background-color: var(--defaultDark);
-  color: var(--defaultLight)
+header .buttons a{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 
 header input {
   margin-right: 5px;
