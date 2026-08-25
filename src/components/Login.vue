@@ -120,7 +120,6 @@ function goHome(){
         <p><strong>Login successful</strong></p>
         <p>To access your account, please refresh this page!</p>
         <button @click="goHome">Refresh</button>
-        <div>𓆏</div>
       </div>
     </div>
     <div v-else class="form-wrapper">
@@ -165,7 +164,6 @@ function goHome(){
   width: 100%;
   margin: auto;
   margin-top: 1rem;
-  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -173,4 +171,5 @@ function goHome(){
   gap: 1rem;
   text-align: center;
 }
+
 </style>

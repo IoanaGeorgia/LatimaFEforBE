@@ -53,8 +53,8 @@ async function logout() {
 <template>
   <div class="page-wrapper account-wrapper">
     <div class="account-innerWrapper">
-      <p class="title">
-        <span>𓍊𓋼</span> Hi, {{ userStore.user?.username }}!
+      <p class="title highlight">
+        Hi, {{ userStore.user?.username }}!
       </p>
 
       <div class="info">
@@ -64,7 +64,6 @@ async function logout() {
       </div>
 
       <div class="your-poems">
-        <div class="smallDecoration">𓇼 ⋆.˚ 𓆉 𓆝 𓆡⋆.˚ 𓇼</div>
         <p class="subtitle">Your poems:</p>
 
         <div v-if="poemsByAuthor.length" v-masonry transition-duration="300ms" fit-width="true" item-selector=".item"
@@ -83,5 +82,9 @@ async function logout() {
 <style scoped>
 .info button{
   max-width:fit-content;
+}
+
+.account-wrapper .title{
+  color:var(--defaultLight);
 }
 </style>

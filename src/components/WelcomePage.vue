@@ -157,6 +157,7 @@ const scrollToAbout = () => {
   max-width:500px;
 }
 
+
 @media(max-width:560px) {
   .about-wrapper .wrapper {
     flex-direction: column;
@@ -237,9 +238,15 @@ const scrollToAbout = () => {
 }
 
 @media(max-width:1045px) {
-  .community-wrapper .wrapper {
+  .community-wrapper .wrapper,
+  .about-wrapper .wrapper {
     flex-direction: column;
     text-align: center;
+    justify-content: center;
+  }
+
+  .about-wrapper .wrapper .texts{
+    width:unset;
   }
 }
 
@@ -254,5 +261,25 @@ const scrollToAbout = () => {
 .community-wrapper .wrapper .texts {
   max-width: 800px;
   width: 100%;
+  padding:var(--defaultSmallPadding);
+}
+
+
+@media(max-width:800px)
+{
+  .about-wrapper .wrapper .title, 
+  .community-wrapper .wrapper .title,
+  .how-wrapper .wrapper .title{
+    font-size:10vw;
+  }
+}
+
+
+@media(max-width:450px){
+  .welcome-wrapper p{
+    -webkit-text-stroke: 1px black;
+    font-size:15vw;
+    font-weight: bold;
+  }
 }
 </style>

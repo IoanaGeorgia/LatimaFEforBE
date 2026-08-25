@@ -13,7 +13,7 @@ const props = defineProps<{
 }>()
 
 export interface Poem {
-  id: any
+  _id: any
   title: string
   text: string
   author: string
@@ -44,9 +44,11 @@ const searchTermFunc = () => {
     searchedPoems.value = poemStore.poems.filter(poem => {
       const matchesTitle = poem.title && poem.title.toLowerCase().includes(query);
       const matchesAuthor = poem.author && poem.author.toLowerCase().includes(query);
+      const matchesMainCategory = poem.main_category && poem.main_category.toLowerCase().includes(query);
       const matchesTags = poem.tags && poem.tags.some(tag => tag.toLowerCase().includes(query));
+      const matchesCategories = poem.categories && poem.categories.some(tag => tag.toLowerCase().includes(query));
 
-      return matchesTitle || matchesAuthor || matchesTags;
+      return matchesTitle || matchesAuthor || matchesTags || matchesCategories || matchesMainCategory;
     });
   }
 

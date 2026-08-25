@@ -1,90 +1,61 @@
 <script setup lang="ts">
 defineProps<{
 }>()
-
-
-
 </script>
 
 <template>
-
-      <div class="loader">
-        <div class="loading-wrapper">
-          <div>𓍊</div>
-          <div>𓋼</div>
-          <div>𓍊</div>
-          <div>𓍊</div>
-          <div>.</div>
-          <div>𓍊</div>
-          <div>𓍊</div>
-          <div>𓍊</div>
-          <div>.</div>
-          <div>𓍊</div>
-          <div>𓍊</div>
-          <div>𓋼</div>
-          <div>𓍊</div>
-          <div>𓋼</div>
-        </div>
-      </div>
+  <div class="loader">
+    <div class="loading-wrapper">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.loader{
-  min-height:100vh;
-  display:flex;
+.loader {
+  min-height: 100vh;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
-
-.loader .loading-wrapper{
-  line-height: 1;
-  font-sIze:2rem;
-  color:var(--accentColor);
-  transform-origin: center center;
+.loader .loading-wrapper {
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  gap: 8px; 
 }
 
-.loader .loading-wrapper div{
-  animation: loading-grow 2s infinite linear;
-  display: block;
-
+.loader .loading-wrapper div {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--defaultDark, #333);
+  animation: loading-grow 2s infinite ease-in-out;
 }
 
-.loader .loading-wrapper div:nth-child(1)  { animation-delay: 0ms; }
-.loader .loading-wrapper div:nth-child(2)  { animation-delay: 100ms; }
-.loader .loading-wrapper div:nth-child(3)  { animation-delay: 200ms; }
-.loader .loading-wrapper div:nth-child(4)  { animation-delay: 300ms; }
-.loader .loading-wrapper div:nth-child(5)  { animation-delay: 400ms; }
-.loader .loading-wrapper div:nth-child(6)  { animation-delay: 500ms; }
-.loader .loading-wrapper div:nth-child(7)  { animation-delay: 600ms; }
-.loader .loading-wrapper div:nth-child(8)  { animation-delay: 700ms; }
-.loader .loading-wrapper div:nth-child(9)  { animation-delay: 800ms; }
-.loader .loading-wrapper div:nth-child(10) { animation-delay: 900ms; }
-.loader .loading-wrapper div:nth-child(11) { animation-delay: 1000ms; }
-.loader .loading-wrapper div:nth-child(12) { animation-delay: 1100ms; }
-.loader .loading-wrapper div:nth-child(13) { animation-delay: 1200ms; }
-.loader .loading-wrapper div:nth-child(14) { animation-delay: 1300ms; }
+.loader .loading-wrapper div:nth-child(1) { animation-delay: 0ms; }
+.loader .loading-wrapper div:nth-child(2) { animation-delay: 400ms; }
+.loader .loading-wrapper div:nth-child(3) { animation-delay: 800ms; }
+.loader .loading-wrapper div:nth-child(4) { animation-delay: 1200ms; }
+.loader .loading-wrapper div:nth-child(5) { animation-delay: 1600ms; }
 
-
-
-
-@keyframes loading-grow{
-
-  0%{
-    transform: translateY(0px);
+@keyframes loading-grow {
+  0% {
+    transform: translateY(0);
   }
-
-   50%{
-    transform: translateY(-40px);
+  10% {
+    transform: translateY(-20px); 
   }
-
-    100%{
-    transform: translateY(0px);
+  20% {
+    transform: translateY(0);
   }
-  
+  100% {
+    transform: translateY(0);
+  }
 }
-
 </style>

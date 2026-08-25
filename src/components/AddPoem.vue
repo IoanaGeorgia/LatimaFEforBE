@@ -1,10 +1,27 @@
 <script setup lang="ts">
-import { useCategoriesStore } from '@/stores/poems'
-import { ref, reactive } from 'vue'
+import { useCategoriesStore, usePoemStore } from '@/stores/poems'
+import { ref, reactive, computed } from 'vue'
 import TopRead from './TopRead.vue'
 import Loader from './Loader.vue'
 
-defineProps<{}>()
+
+const props = defineProps<{
+  id: string | number
+}>()
+
+const poemsStore = usePoemStore()
+
+const poemProp = computed(() => poemsStore.poems.find((poem) => poem._id = props.id))
+
+export interface Poem {
+  id: any
+  title: string
+  text: string
+  author: string
+  main_category: string
+  tags: string[]
+  categories: string[]
+}
 
 interface Category {
   id: string | number
@@ -16,12 +33,12 @@ const categoriesStore = useCategoriesStore()
 const categories = categoriesStore.categories as unknown as Category[]
 
 let poem = ref({
-  title: '',
-  text: '',
-  tags: [] as string[],
-  categories: [] as string[],
-  main_category: '',
-  author: 'default'
+  title: poemProp.value.title || '',
+  text: poemProp.value.text || '',
+  tags: poemProp.value.tags ||  [] as string[],
+  categories: poemProp.value.categories || [] as string[],
+  main_category: poemProp.value.main_category || '',
+  author: poemProp.value.author || 'default'
 })
 
 let isOpenMain = ref(false)
@@ -151,7 +168,34 @@ const submitForm = async () => {
   }
 
   isLoading.value = true
+  if(props.id){
 
+
+      try {
+    const response = await fetch('/api/editPoems', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(poem.value)
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('Poem edited successfully:', result.data)
+    isSubmitted.value = true
+  } catch (error) {
+    console.error('Failed to edit poem:', error)
+    errors.submit = 'Something went wrong editing your poem. Please try again.'
+  } finally {
+    isLoading.value = false
+  }
+
+
+  }else{
   try {
     const response = await fetch('/api/poems', {
       method: 'POST',
@@ -174,6 +218,8 @@ const submitForm = async () => {
   } finally {
     isLoading.value = false
   }
+  }
+
 }
 
 
@@ -305,3 +351,8 @@ function getCategorySymbol(categoryName: string) {
     <TopRead />
   </div>
 </template>
+
+<style scoped>
+
+
+</style>

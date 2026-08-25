@@ -33,6 +33,7 @@
   margin: 0px;
   box-sizing: border-box;
   font-size: inherit;
+  font-family: inherit;
 }
 
 body {
@@ -79,11 +80,22 @@ a {
   padding-top: var(--bigMargin);
 }
 
+.all-wrapper{
+  padding-bottom:var(--bigMargin);
+}
+
 .welcome-wrapper{
   background-image: url("../assets/images/home-bg.png");
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: 100% 50%;
+  background-position: 100% 0%;
+}
+
+@media(max-width:560px){
+  .welcome-wrapper{
+  background-position: 50% 0%;
+  background-size: cover;
+}
 }
 
 button {
@@ -162,7 +174,14 @@ li {
   width: 100%;
   max-width: 320px;
   min-width:320px;
-  background-color: var(--bgColor);
+  background-color: var(--defaultLight);
+}
+
+@media(max-width:380px){
+  .container.poem{
+    max-width:300px;
+    min-width: 300px;
+  }
 }
 
 .subtitle {
@@ -193,6 +212,15 @@ li {
   overflow: clip;
   text-overflow: ellipsis;
   font-weight: bold;
+  cursor: pointer;
+}
+
+.main_category{
+  cursor: pointer;
+}
+
+.poem-content{
+  cursor: pointer;
 }
 
 input {
@@ -211,12 +239,27 @@ input:focus {
   transition: var(--transitionTime) all;
 }
 
+label{
+  font-size: var(--smallFontSize);
+}
+
 
 .poem {
   display: flex;
   flex-direction: column;
   gap: var(--defaultSmallPadding);
   align-items: center;
+}
+
+.edit-button{
+  position: absolute;
+  top:0px;
+  right:0px;
+  padding:10px 10px;
+  border-radius: 50%;
+  background-color: var(--defaultLight);
+  font-size:1rem;
+  cursor: pointer;
 }
 
 .poem .subtitle {
@@ -239,13 +282,23 @@ input:focus {
   gap: 5px;
 }
 
-.tags>div {
+.tags>div, .cat_tags {
   width: 100%;
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
   gap: var(--defaultSmallPadding);
   padding: 0px, var(--defaultSmallPadding);
+}
+
+p.cat_tags{
+  flex-wrap: wrap;
+  min-width:min-content;
+  row-gap: 0px;
+}
+
+p.cat_tags div{
+  cursor: pointer;
 }
 
 .poem-footer {
@@ -330,12 +383,12 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom:var(--bigMargin);
 }
 
 .account-wrapper .your-poems>.subtitle {
   text-align: center;
-  margin-bottom: var(--defaultPagePadding);
-  margin-top: var(--headerHeight);
+  margin-bottom: var(--defaultMargin);
 }
 
 
@@ -347,11 +400,6 @@ footer {
   padding-top: 20px;
 }
 
-.account-wrapper .your-poems .smallDecoration {
-  color: var(--accentColor);
-  font-size: 2.5rem;
-  text-align: center;
-}
 
 .title-wrapper {
   background-color: var(--defaultDark);
@@ -366,10 +414,8 @@ footer {
 }
 
 
-
 .form-wrapper {
   padding: var(--defaultPagePadding);
-  margin-top: var(--bigMargin);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -393,6 +439,7 @@ footer {
   justify-content: center;
   align-items: center;
   gap: var(--defaultPagePadding);
+  background-color: var(--defaultLight);
 }
 
 .form-wrapper .input-wrapper {
@@ -430,8 +477,12 @@ footer {
   display: flex;
   gap: var(--defaultSmallPadding);
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 5px;
+}
+
+.tags div div{
+  cursor: pointer;
 }
 
 .cat-dropdown {

@@ -37,7 +37,6 @@ const symbol = computed(() => {
 <style scoped>
 .symbol-wrapper div {
   font-size: 50px;
-  color: var(--accentColor);
   line-height: 0px;
 }
 </style>

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 
 export interface Poem {
-  id: any
+  _id: any
   title: string
   text: string
   author:string

@@ -8,7 +8,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 defineProps<{}>()
 
 export interface Poem {
-  id: any
+  _id: any
   title: string
   text: string
   author: string
@@ -56,7 +56,7 @@ onUnmounted(() => {
 
 <style scoped>
 .all-wrapper {
-  max-width: var(--containerDefaultWidth);
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding-bottom: var(--headerHeight);

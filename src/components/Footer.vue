@@ -11,7 +11,7 @@ defineProps<{
   <footer>
     <div class="footer-wrapper">
       <RouterLink to="/">
-        °‧ 𓆝 𓆟 𓆞 ·｡
+        <div class="logo">✒<span>L</span>at</div>
       </RouterLink>
 
     </div>

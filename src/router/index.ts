@@ -45,6 +45,13 @@ const router = createRouter({
       name:'login',
       component: () => import('@/components/Login.vue'),
       meta: { requiresGuest: true }
+    },
+      {
+      path: '/edit-poem/:id',
+      name: 'edit-poem',
+      component: () => import('@/components/AddPoem.vue'),
+      props: true,
+      meta: { requiresAuth: true } 
     }  ],
 })
 

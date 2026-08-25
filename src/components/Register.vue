@@ -16,7 +16,8 @@ const userData = ref({
   username: "",
   mail: "",
   password: "",
-  retype_password: ""
+  retype_password: "",
+  terms:false
 })
 
 const userErrors = ref({
@@ -24,6 +25,7 @@ const userErrors = ref({
   mail: "",
   password: "",
   retype_password: "",
+  terms:"",
   callError: ""
 })
 
@@ -43,6 +45,7 @@ function validateData() {
   else {
     userErrors.value.username = ""
   }
+
 
   // mail validation
 
@@ -81,6 +84,15 @@ function validateData() {
   }
   else {
     userErrors.value.retype_password = "";
+  }
+
+
+   // terms validation
+  if (!userData.value.terms) {
+    userErrors.value.terms = "Accepting the terms and conditions is required"
+  }
+  else {
+    userErrors.value.terms = ""
   }
 
   const hasErrors = Object.entries(userErrors.value).some(
@@ -148,7 +160,6 @@ function goHome(){
         <p><strong>Thank you for registering!</strong></p>
         <p>To access your account, please refresh this page!</p>
         <button @click="goHome">Refresh</button>
-        <div>𓆏</div>
       </div>
     </div>
     <div v-else class="form-wrapper">
@@ -185,6 +196,18 @@ function goHome(){
           <p class="error-msg" v-if="userErrors.retype_password">{{ userErrors.retype_password }}</p>
         </div>
 
+
+         <div class="input-wrapper terms-wrapper">
+          <div>
+          <input id="terms" v-model="userData.terms" type="checkbox" :aria-label="userData.terms ? 'Accepted terms and conditions' : 'Not accepted terms and conditions'">
+          <label for="terms">
+            By accessing or using this website, you agree to comply with and be bound by these Terms of Service and all applicable laws. All original poems and creative works published on this site remain the intellectual property of their respective authors and are protected by copyright. You agree to use this platform respectfully, without submitting harmful, plagiarized, or inappropriate content. We reserve the right to modify these terms or update website content at any time without prior notice.
+          </label>
+          </div>
+          <p class="error-msg" v-if="userErrors.terms">{{ userErrors.terms }}</p>
+        </div>
+
+
         <p class="error-msg" v-if="userErrors.callError">{{ userErrors.callError }}</p>
         <button type="submit" @click.prevent="validateData">Register</button>
 
@@ -217,4 +240,77 @@ function goHome(){
   gap: 1rem;
   text-align: center;
 }
+
+.input-wrapper.terms-wrapper > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+}
+
+.terms-wrapper input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 1;
+  margin: 0;
+}
+
+.terms-wrapper label {
+  position: relative;
+  padding-left: 28px; 
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+}
+
+.terms-wrapper label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #666;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+.terms-wrapper label::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.2s ease-in-out;
+}
+
+.terms-wrapper:hover input[type="checkbox"] + label::before {
+  border-color: var(----defaultDark);
+}
+
+.terms-wrapper input[type="checkbox"]:focus-visible + label::before {
+  outline: 2px solid var(--defaultDark);
+  outline-offset: 2px;
+}
+
+.terms-wrapper input[type="checkbox"]:checked + label::before {
+  background-color:  var(--defaultDark);
+  border-color:  var(--defaultDark);
+}
+
+.terms-wrapper input[type="checkbox"]:checked + label::after {
+  transform: rotate(45deg) scale(1);
+}
+
+
 </style>

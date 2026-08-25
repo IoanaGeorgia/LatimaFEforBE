@@ -14,7 +14,7 @@ const poemStore = usePoemStore()
 
     <div class="top-wrapper">
       <div class="wrapper">
-        <p class="title">Most r<span>ea</span>d</p>
+        <p class="title highlight">Most r<span>ea</span>d</p>
 
         <RouterLink to="/poems"><button class="reverse">See all poems</button></RouterLink>
 
@@ -39,5 +39,15 @@ const poemStore = usePoemStore()
   background-size:contain;
   background-position: 0% 100%;
   background-repeat: no-repeat;
+}
+
+.top-wrapper .title{
+  color:var(--defaultLight);
+}
+
+@media(max-width:800px){
+  .top-wrapper .title{
+    font-size:10vw
+  }
 }
 </style>

@@ -69,11 +69,11 @@ const sendSearchDirect = () => {
   <header>
     <div class="header-wrapper">
       <RouterLink to="/">
-        <div class="logo">𓍊<span>𓋼L</span>at</div>
+        <div class="logo">✒<span>L</span>at</div>
       </RouterLink>
       <div class="buttons desktop">
         <div class="search-wrapper">
-          <input v-model.trim="searchTerm" type="text" placeholder="Type here to search"
+          <input v-model.trim="searchTerm" type="text" placeholder="Search poem..."
             @keyup.enter="sendSearchDirect" maxlength="15"></input>
           <button class="search-btn" @click="sendSearch">🔍︎
 
@@ -105,12 +105,17 @@ const sendSearchDirect = () => {
           <RouterLink to="/poems"> <button class="reverse" aria-label="See all poems" title="See all poems">All poems</button>
           </RouterLink>
           <div class="search-wrapper">
-            <input v-model.trim="searchTerm" type="text" placeholder="Type here to search"
+            <input v-model.trim="searchTerm" type="text" placeholder="Search poem..."
               @keyup.enter="sendSearchDirect" maxlength="15"></input>
             <button class="search-btn" @click="sendSearch" aria-label="search" title="search">🔍︎
 
             </button>
           </div>
+
+        <RouterLink to="/">
+        <div class="logo">✒<span>L</span>at</div>
+      </RouterLink>
+
         </div>
       </div>
 
