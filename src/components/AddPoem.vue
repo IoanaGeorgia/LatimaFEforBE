@@ -3,6 +3,7 @@ import { useCategoriesStore, usePoemStore, useUserStore } from '@/stores/poems'
 import { ref, reactive, computed, watch } from 'vue'
 import TopRead from './TopRead.vue'
 import Loader from './Loader.vue'
+import DOMPurify from 'dompurify'
 
 function encodeForInput(text?: string): string {
   if (!text) return ''
@@ -184,10 +185,13 @@ const submitForm = async () => {
 
   isLoading.value = true
 
+  const sanitizedText = DOMPurify.sanitize(poem.value.text, { ALLOWED_TAGS: [] })
+
   const payload = {
     ...poem.value,
-    text: decodeFromInput(poem.value.text)
+    text: decodeFromInput(sanitizedText) 
   }
+
 
   if (props.id) {
     try {
