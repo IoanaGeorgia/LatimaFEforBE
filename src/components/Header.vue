@@ -11,7 +11,7 @@ const isMobileOpen = ref(false)
 const userStore = useUserStore()
 
 const isRegister = computed(() => {
-  return !!userStore.user?.username; 
+  return !!userStore.user?.username;
 });
 
 
@@ -59,7 +59,9 @@ const sendSearchDirect = () => {
   }
 }
 
-
+function addPoem() {
+  router.push({ name: 'addPoem', params: { id: null } })
+}
 
 
 </script>
@@ -73,48 +75,49 @@ const sendSearchDirect = () => {
       </RouterLink>
       <div class="buttons desktop">
         <div class="search-wrapper">
-          <input v-model.trim="searchTerm" type="text" placeholder="Search poem..."
-            @keyup.enter="sendSearchDirect" maxlength="15"></input>
+          <input v-model.trim="searchTerm" type="text" placeholder="Search poem..." @keyup.enter="sendSearchDirect"
+            maxlength="15"></input>
           <button class="search-btn" @click="sendSearch">🔍︎
 
           </button>
         </div>
-        <RouterLink to="/add-poem"> <button class="reverse" aria-label="Add a poem" title="Add a poem">Add poem</button>
-        </RouterLink>
+        <a @click="addPoem"> <button class="reverse" aria-label="Add a poem" title="Add a poem">Add poem</button>
+        </a>
         <RouterLink v-if="!isRegister" to="/register"><button class="reverse sign-up" aria-label="Sign up"
             title="Sign up">Sign up</button></RouterLink>
         <RouterLink v-else to="/account"><button class="reverse" aria-label="Go to account"
             title="Account">Account</button></RouterLink>
 
-        <RouterLink to="/poems"> <button class="reverse all-poems" aria-label="See all poems"
-            title="See all poems">See all</button></RouterLink>
+        <RouterLink to="/poems"> <button class="reverse all-poems" aria-label="See all poems" title="See all poems">See
+            all</button></RouterLink>
       </div>
 
       <button class="mobileMenu" @click="toggleMobileMenu"> ≡</button>
       <div v-if="isMobileOpen" class="mobile-menu-wrapper">
         <div class="buttons">
 
-          <RouterLink to="/add-poem"> <button class="reverse" aria-label="Add a poem" title="Add a poem">Add poem</button>
-          </RouterLink>
+          <a @click="addPoem"> <button class="reverse" aria-label="Add a poem" title="Add a poem">Add poem</button>
+          </a>
           <RouterLink v-if="!isRegister" to="/register"><button class="reverse sign-up" aria-label="Sign up"
               title="Sign up">Sign up</button></RouterLink>
           <RouterLink v-else to="/account"><button class="reverse" aria-label="Go to account"
               title="Account">Account</button></RouterLink>
 
 
-          <RouterLink to="/poems"> <button class="reverse" aria-label="See all poems" title="See all poems">All poems</button>
+          <RouterLink to="/poems"> <button class="reverse" aria-label="See all poems" title="See all poems">All
+              poems</button>
           </RouterLink>
           <div class="search-wrapper">
-            <input v-model.trim="searchTerm" type="text" placeholder="Search poem..."
-              @keyup.enter="sendSearchDirect" maxlength="15"></input>
+            <input v-model.trim="searchTerm" type="text" placeholder="Search poem..." @keyup.enter="sendSearchDirect"
+              maxlength="15"></input>
             <button class="search-btn" @click="sendSearch" aria-label="search" title="search">🔍︎
 
             </button>
           </div>
 
-        <RouterLink to="/">
-        <div class="logo">✒<span>L</span>at</div>
-      </RouterLink>
+          <RouterLink to="/">
+            <div class="logo">✒<span>L</span>at</div>
+          </RouterLink>
 
         </div>
       </div>
@@ -142,9 +145,9 @@ header>div {
   justify-content: space-between;
   align-items: center;
   background-color: var(--defaultLight);
-  border:1px solid var(--defaultDark);
-  border-radius:50px;
-  padding:5px 20px;
+  border: 1px solid var(--defaultDark);
+  border-radius: 50px;
+  padding: 5px 20px;
 }
 
 header {
@@ -162,11 +165,11 @@ header .logo {
 }
 
 header .buttons button {
-    padding: 5px 10px;
-    background-color:transparent;
-    color: var(--defaultDark);
-    border:none;
-    transition: var(--transitionTime) all;
+  padding: 5px 10px;
+  background-color: transparent;
+  color: var(--defaultDark);
+  border: none;
+  transition: var(--transitionTime) all;
 
 
 }
@@ -174,12 +177,12 @@ header .buttons button {
 header .buttons button.search-btn {
   max-width: unset;
   width: unset;
-  padding-left:5px;
-  padding-right:5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 
-header .buttons a{
+header .buttons a {
   display: flex;
   justify-content: center;
   align-items: center;

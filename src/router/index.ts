@@ -15,7 +15,8 @@ const router = createRouter({
       path: '/add-poem',
       name: 'addPoem',
       component: () => import('@/components/AddPoem.vue'),
-      meta: { requiresAuth: true }
+      props: true,
+      meta: { requiresAuth: true}
     },
     {
       path: '/poems',

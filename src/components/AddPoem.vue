@@ -1,17 +1,29 @@
 <script setup lang="ts">
-import { useCategoriesStore, usePoemStore } from '@/stores/poems'
-import { ref, reactive, computed } from 'vue'
+import { useCategoriesStore, usePoemStore, useUserStore } from '@/stores/poems'
+import { ref, reactive, computed, watch } from 'vue'
 import TopRead from './TopRead.vue'
 import Loader from './Loader.vue'
 
+function encodeForInput(text?: string): string {
+  if (!text) return ''
+  return text
+    .replace(/^['"]|['"]$/g, '')
+    .replace(/\\n/g, '\n')
+    .replace(/\\'/g, "'")
+    .replace(/\\"/g, '"')
+}
+
+function decodeFromInput(text: string): string {
+  if (!text) return ''
+  return text.replace(/\n/g, '\\n')
+}
 
 const props = defineProps<{
-  id: string | number
+  id?: string | number
 }>()
 
 const poemsStore = usePoemStore()
-
-const poemProp = computed(() => poemsStore.poems.find((poem) => poem._id = props.id))
+const categoriesStore = useCategoriesStore()
 
 export interface Poem {
   id: any
@@ -29,16 +41,21 @@ interface Category {
   symbol: string
 }
 
-const categoriesStore = useCategoriesStore()
+const userStore = useUserStore()
+
 const categories = categoriesStore.categories as unknown as Category[]
 
+const poemProp = computed(() =>
+  props.id ? poemsStore.poems.find((poem) => String(poem._id) === String(props.id)) : null
+)
+
 let poem = ref({
-  title: poemProp.value.title || '',
-  text: poemProp.value.text || '',
-  tags: poemProp.value.tags ||  [] as string[],
-  categories: poemProp.value.categories || [] as string[],
-  main_category: poemProp.value.main_category || '',
-  author: poemProp.value.author || 'default'
+  title: poemProp.value?.title ?? '',
+  text: encodeForInput(poemProp.value?.text),
+  tags: poemProp.value?.tags ? [...poemProp.value.tags] : [],
+  categories: poemProp.value?.categories ? [...poemProp.value.categories] : [],
+  main_category: poemProp.value?.main_category ?? '',
+  author: userStore.user?.username
 })
 
 let isOpenMain = ref(false)
@@ -163,65 +180,55 @@ const deleteTag = (name: string | undefined) => {
 }
 
 const submitForm = async () => {
-  if (!validateForm()) {
-    return
-  }
+  if (!validateForm()) return
 
   isLoading.value = true
-  if(props.id){
 
+  const payload = {
+    ...poem.value,
+    text: decodeFromInput(poem.value.text)
+  }
 
-      try {
-    const response = await fetch('/api/editPoems', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(poem.value)
-    })
+  if (props.id) {
+    try {
+      const response = await fetch('/api/editPoem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...payload, _id: props.id })
+      })
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
+
+      const result = await response.json()
+      poemsStore.updatePoem(result.data)
+      isSubmitted.value = true
+    } catch (error) {
+      console.error('Failed to edit poem:', error)
+      errors.submit = 'Something went wrong editing your poem. Please try again.'
+    } finally {
+      isLoading.value = false
     }
+  } else {
+    try {
+      const response = await fetch('/api/addPoem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
 
-    const result = await response.json()
-    console.log('Poem edited successfully:', result.data)
-    isSubmitted.value = true
-  } catch (error) {
-    console.error('Failed to edit poem:', error)
-    errors.submit = 'Something went wrong editing your poem. Please try again.'
-  } finally {
-    isLoading.value = false
-  }
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
 
-
-  }else{
-  try {
-    const response = await fetch('/api/poems', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(poem.value)
-    })
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
+      const result = await response.json()
+      poemsStore.addPoem(result.data)
+      isSubmitted.value = true
+    } catch (error) {
+      console.error('Failed to submit poem:', error)
+      errors.submit = 'Something went wrong submitting your poem. Please try again.'
+    } finally {
+      isLoading.value = false
     }
-
-    const result = await response.json()
-    console.log('Poem saved successfully:', result.data)
-    isSubmitted.value = true
-  } catch (error) {
-    console.error('Failed to submit poem:', error)
-    errors.submit = 'Something went wrong submitting your poem. Please try again.'
-  } finally {
-    isLoading.value = false
   }
-  }
-
 }
-
 
 function getCategorySymbol(categoryName: string) {
   if (!categories || !Array.isArray(categories)) return ''
@@ -230,49 +237,73 @@ function getCategorySymbol(categoryName: string) {
   )
   return found ? found.symbol : ''
 }
+
+watch(
+  () => props.id,
+  () => {
+    const currentPoem = poemProp.value
+    if (currentPoem) {
+      poem.value = {
+        title: currentPoem.title ?? '',
+        text: encodeForInput(currentPoem.text),
+        tags: Array.isArray(currentPoem.tags) ? [...currentPoem.tags] : [],
+        categories: Array.isArray(currentPoem.categories) ? [...currentPoem.categories] : [],
+        main_category: currentPoem.main_category ?? '',
+        author: userStore.user?.username
+      }
+      catDropdownMainValue.value = currentPoem.main_category || 'Select main category'
+    } else {
+      poem.value = {
+        title: '',
+        text: '',
+        tags: [],
+        categories: [],
+        main_category: '',
+        author: userStore.user?.username
+      }
+      catDropdownMainValue.value = 'Select main category'
+      catDropdownValue.value = 'Select categories'
+      isSubmitted.value = false
+      clearErrors()
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
   <div class="page-wrapper add-poem">
     <div class="title-wrapper">
-      <p class="title">Make your own p<span class="reverse">oe</span>m</p>
+      <p v-if="props.id" class="title">Edit your poem</p>
+      <p v-else class="title">Make your own poem</p>
+
     </div>
 
     <div v-if="isSubmitted">
       <Loader v-if="isLoading" />
       <div v-else class="submitted">
-        <p><strong>Thank you for your submission!</strong></p>
-        <p>We will review it in 3-5 working days and let you know further ahead if there are any issues.</p>
-        <div>𓆏</div>
+        <p v-if="props.id"><strong>Your poem has been successfully edited!</strong></p>
+        <p v-else><strong>Thank you for your submission!</strong></p>
+        <p v-if="props.id">You can now go back to the main page.</p>
+        <p v-else>We will review it in 3-5 working days and let you know further ahead if there are any issues.</p>
+
       </div>
     </div>
 
     <div v-else class="form-wrapper">
       <form class="container" @submit.prevent="submitForm">
-        
-        <div v-if="errors.submit" class="error-msg global-error">
-          {{ errors.submit }}
-        </div>
 
         <div class="input-wrapper">
           <label>Poem title:</label>
-          <input
-            type="text"
-            v-model="poem.title"
-            :class="{ 'has-error': errors.title }"
-            placeholder="Write the title here..."
-          />
+          <input type="text" v-model="poem.title" :class="{ 'has-error': errors.title }"
+            placeholder="Write the title here..." />
           <p v-if="errors.title" class="error-msg">{{ errors.title }}</p>
         </div>
 
         <div class="input-wrapper">
           <label>Poem body: </label>
-          <textarea
-            v-model="poem.text"
-            @input="autoResize"
-            :class="{ 'has-error': errors.text }"
-            placeholder="Write here the content of your poem..."
-          />
+          <textarea v-model="poem.text" @input="autoResize" :class="{ 'has-error': errors.text }"
+            placeholder="Write here the content of your poem..." />
           <p v-if="errors.text" class="error-msg">{{ errors.text }}</p>
         </div>
 
@@ -281,15 +312,11 @@ function getCategorySymbol(categoryName: string) {
           <div class="cat-dropdown" :class="{ 'has-error': errors.main_category }">
             <p class="main-btn" @click="toggleMainDropdown">
               <span>{{ catDropdownMainValue }}</span>
-              <div v-if="isOpenMain" class="arrow opened">〉</div>
-              <div v-else class="arrow closed">〉</div>
+            <div v-if="isOpenMain" class="arrow opened">〉</div>
+            <div v-else class="arrow closed">〉</div>
             </p>
             <div v-if="isOpenMain" class="options">
-              <div
-                v-for="category in categories"
-                :key="category.id"
-                @click="selectMainCategory(category.name)"
-              >
+              <div v-for="category in categories" :key="category.id" @click="selectMainCategory(category.name)">
                 <span>{{ category.symbol }} {{ category.name }}</span>
               </div>
             </div>
@@ -302,15 +329,11 @@ function getCategorySymbol(categoryName: string) {
           <div class="cat-dropdown" :class="{ 'has-error': errors.categories }">
             <p class="main-btn" @click="toggleDropdown">
               <span>{{ catDropdownValue }}</span>
-              <div v-if="isOpen" class="arrow opened">〉</div>
-              <div v-else class="arrow closed">〉</div>
+            <div v-if="isOpen" class="arrow opened">〉</div>
+            <div v-else class="arrow closed">〉</div>
             </p>
             <div v-if="isOpen" class="options">
-              <div
-                v-for="category in categories"
-                :key="category.id"
-                @click="selectCategory(category.name)"
-              >
+              <div v-for="category in categories" :key="category.id" @click="selectCategory(category.name)">
                 <span>{{ category.symbol }} {{ category.name }}</span>
               </div>
             </div>
@@ -319,7 +342,7 @@ function getCategorySymbol(categoryName: string) {
           <div class="categories">
             <div v-if="!poem.categories.length" class="empty-hint">No categories selected</div>
             <div class="tag" v-else v-for="name in poem.categories" :key="name">
-              <span>{{ getCategorySymbol(name) }}{{ name }}</span>
+              <span>{{ getCategorySymbol(name) }} {{ name }}</span>
               <button type="button" class="close-tag" @click="deleteCat(name)">×</button>
             </div>
           </div>
@@ -328,12 +351,8 @@ function getCategorySymbol(categoryName: string) {
 
         <div class="input-wrapper">
           <label>Tags (1 to 10 required): </label>
-          <input
-            type="text"
-            @keydown.enter.prevent="addTags"
-            :class="{ 'has-error': errors.tags }"
-            placeholder="Type tag and press Enter"
-          />
+          <input type="text" @keydown.enter.prevent="addTags" :class="{ 'has-error': errors.tags }"
+            placeholder="Type tag and press Enter" />
           <div v-if="poem.tags.length > 0" class="input tags">
             <div class="tag" v-for="tag in poem.tags.slice(0, 10)" :key="tag">
               #{{ tag }}
@@ -341,6 +360,10 @@ function getCategorySymbol(categoryName: string) {
             </div>
           </div>
           <p v-if="errors.tags" class="error-msg">{{ errors.tags }}</p>
+        </div>
+
+        <div v-if="errors.submit" class="error-msg">
+          {{ errors.submit }}
         </div>
 
         <button type="submit" :disabled="isLoading">
@@ -352,7 +375,4 @@ function getCategorySymbol(categoryName: string) {
   </div>
 </template>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

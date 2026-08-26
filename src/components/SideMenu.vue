@@ -16,6 +16,24 @@ function searchPage(term: string) {
 
   uiStore.closeMenu();
 }
+
+
+function decodeText(text?: string): string {
+  if (!text) return ''
+
+let cleanText = text
+    .replace(/^['"]|['"]$/g, '')
+    .replace(/\\'/g, "'")
+    .replace(/\\"/g, '"')
+    .replace(/\\n/g, '\n')
+
+  return cleanText
+    .split('\n')
+    .filter((line) => line.trim() !== '')
+    .map((line) => `<p>${line.trim()}</p>`)
+    .join('')
+}
+
 </script>
 
 <template>
@@ -25,7 +43,7 @@ function searchPage(term: string) {
       <div class="sidemenu-wrapper">
         <div class="poem container">
           <p class="subtitle">{{ uiStore.activePoem.title }}</p>
-          <div class="content" v-html="uiStore.activePoem.text"></div>
+          <div class="content" v-html="decodeText(uiStore.activePoem.text)"></div>
 
           <div class="poem-footer">
             <div class="wrapper">

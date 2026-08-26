@@ -39,9 +39,29 @@ const isRegister = computed(() => {
   return !!userStore.user?.username; 
 });
 
+const isAuthor = computed(() =>{
+  return isRegister && userStore.user?.username === props.poem.author
+})
+
 
 function editPoem(){
   router.push({ name: 'edit-poem', params: { id: props.poem._id } })
+}
+
+function decodeText(text?: string): string {
+  if (!text) return ''
+
+let cleanText = text
+    .replace(/^['"]|['"]$/g, '')
+    .replace(/\\'/g, "'")
+    .replace(/\\"/g, '"')
+    .replace(/\\n/g, '\n')
+
+  return cleanText
+    .split('\n')
+    .filter((line) => line.trim() !== '')
+    .map((line) => `<p>${line.trim()}</p>`)
+    .join('')
 }
 
 </script>
@@ -49,10 +69,10 @@ function editPoem(){
 <template>
 
   <div class="poem container">
-    <div v-if="isRegister" class="edit-button" @click="editPoem">🖍</div>
+    <div v-if="isAuthor" class="edit-button" @click="editPoem">🖍</div>
     <div class="poem-content" @click="openSideMenu">
       <p class="subtitle">{{ poem.title }}</p>
-      <div class="content" v-html="poem.text"></div>
+      <div class="content" v-html="decodeText(poem?.text)"></div>
     </div>
     <div class="poem-footer">
       <div class="wrapper">

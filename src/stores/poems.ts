@@ -22,9 +22,22 @@ export const usePoemStore = defineStore('poem', () => {
     poems.value = newPoems
   }
 
+  function addPoem(newPoem) {
+    poems.value.unshift(newPoem) 
+  }
+
+  function updatePoem(updatedPoem) {
+    const index = poems.value.findIndex(p => p._id === updatedPoem._id)
+    if (index !== -1) {
+      poems.value[index] = updatedPoem
+    }
+  }
+
   return {
     poems,
-    setPoems
+    setPoems,
+    addPoem,
+    updatePoem
   }
 })
 

@@ -502,6 +502,12 @@ footer {
   cursor: pointer;
 }
 
+.cat-dropdown .main-btn span,
+.cat-dropdown .options,
+.form-wrapper {
+  font-size:var(--smallFontSize)
+}
+
 .cat-dropdown .arrow.closed {
   line-height: 10px;
   transform: rotate(-90deg);
@@ -583,18 +589,6 @@ footer {
   margin-top: 2px;
 }
 
-.global-error {
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  padding: 10px 15px;
-  border-radius: 6px;
-  width: 100%;
-  text-align: center;
-}
-
-.has-error {
-  border-color: #d9534f !important;
-}
 
 .empty-hint {
   font-size: 0.85rem;
