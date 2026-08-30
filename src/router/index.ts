@@ -60,16 +60,18 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
 
-  if (userStore.user === null) {
-    await getUser() 
-  }
+  if (to.meta.requiresAuth || to.meta.requiresGuest) {
+    if (userStore.user === null) {
+      await getUser()
+    }
 
-  if (to.meta.requiresAuth && !userStore.user) {
-    return next({ name: 'login' })
-  }
+    if (to.meta.requiresAuth && !userStore.user) {
+      return next({ name: 'login' })
+    }
 
-  if (to.meta.requiresGuest && userStore.user) {
-    return next({ name: 'home' })
+    if (to.meta.requiresGuest && userStore.user) {
+      return next({ name: 'home' })
+    }
   }
 
   next()

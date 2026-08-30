@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import PoemSymbol from './PoemSymbol.vue';
-import { usePoemStore } from '@/stores/poems'
 import { RouterLink } from 'vue-router'
 import TopRead from './TopRead.vue';
+import Loader from './Loader.vue';
 defineProps<{
 }>()
 
-const poemStore = usePoemStore()
 
 const scrollToAbout = () => {
   const element = document.getElementById('about')
@@ -102,7 +100,17 @@ const scrollToAbout = () => {
       </div>
     </div>
 
-    <TopRead></TopRead>
+    <Suspense>
+      <template #default>
+        <TopRead />
+      </template>
+      <template #fallback>
+        <div class="loading-state">
+          
+          <Loader />
+        </div>
+      </template>
+    </Suspense>
 
 
   </div>

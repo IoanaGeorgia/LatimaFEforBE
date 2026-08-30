@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
-import { usePoemStore, useUserStore, useCategoriesStore } from '@/stores/poems'
+import { usePoemStore, useUserStore, useCategoriesStore} from '@/stores/poems'
 
 import Header from './components/Header.vue'
 import SideMenu from './components/SideMenu.vue'
@@ -12,7 +12,9 @@ const userStore = useUserStore()
 const categoriesStore = useCategoriesStore()
 
 onMounted(async () => {
+  poemStore.setLoading(true)
   await Promise.all([getUser(), getPoems(), getCategories()])
+  poemStore.setLoading(false)
 })
 
 async function getUser(): Promise<void>{

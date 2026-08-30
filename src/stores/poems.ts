@@ -17,9 +17,14 @@ export interface Poem {
 export const usePoemStore = defineStore('poem', () => {
  
   const poems = ref<Poem[]>([])
+  const isLoading = ref<boolean>(true)
 
   function setPoems(newPoems: Poem[]) {
     poems.value = newPoems
+  }
+
+  function setLoading(status: boolean) {
+    isLoading.value = status
   }
 
   function addPoem(newPoem) {
@@ -37,7 +42,9 @@ export const usePoemStore = defineStore('poem', () => {
     poems,
     setPoems,
     addPoem,
-    updatePoem
+    updatePoem,
+    setLoading,
+    isLoading
   }
 })
 
