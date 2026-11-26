@@ -53,7 +53,8 @@ export interface User {
   username: string
   mail:string
   createdAt: string
-  in_submission: number
+  in_submission: number,
+  isFavourite?:string[]
   
 }
 
@@ -92,8 +93,13 @@ export const useCategoriesStore = defineStore('categories', () => {
 })
 
 export const useUiStore = defineStore('ui', () => {
+  
   const isSideMenuOpen = ref(false)
   const activePoem = ref<any>(null)
+
+  function setActivePoemFavourite(){
+    activePoem.value.isFavourite = !activePoem.value.isFavourite
+  }
 
   function openMenu(poem: any) {
     activePoem.value = poem
@@ -104,5 +110,5 @@ export const useUiStore = defineStore('ui', () => {
     isSideMenuOpen.value = false
   }
 
-  return { isSideMenuOpen, activePoem, openMenu, closeMenu }
+  return { isSideMenuOpen, activePoem, openMenu, closeMenu, setActivePoemFavourite }
 })

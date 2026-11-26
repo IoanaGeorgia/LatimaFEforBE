@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import PoemSymbol from './PoemSymbol.vue';
-import { useUiStore } from '@/stores/poems';
+import { useUiStore, useUserStore } from '@/stores/poems';
+import { computed } from 'vue';
 
 const uiStore = useUiStore();
 const router = useRouter();
@@ -16,12 +17,16 @@ function searchPage(term: string) {
 
   uiStore.closeMenu();
 }
+const userStore = useUserStore()
 
+const isRegister = computed(() => {
+  return !!userStore.user?.username;
+});
 
 function decodeText(text?: string): string {
   if (!text) return ''
 
-let cleanText = text
+  let cleanText = text
     .replace(/^['"]|['"]$/g, '')
     .replace(/\\'/g, "'")
     .replace(/\\"/g, '"')
@@ -33,6 +38,32 @@ let cleanText = text
     .map((line) => `<p>${line.trim()}</p>`)
     .join('')
 }
+
+async function toggleFavourite(id: string) {
+
+  console.log(id, 'id')
+  try {
+    const response = await fetch('/api/addToFavourites', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id })
+    })
+
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
+
+    const result = await response.json()
+
+    if (result.success) {
+      uiStore.setActivePoemFavourite()
+    }
+
+  } catch (error) {
+    console.error('Failed to edit poem:', error)
+  }
+}
+
+
+
 
 </script>
 
@@ -47,11 +78,16 @@ let cleanText = text
 
           <div class="poem-footer">
             <div class="wrapper">
+              <div v-if="isRegister" class="favourite" @click="toggleFavourite(uiStore.activePoem._id)">
+                <p v-if=uiStore.activePoem.isFavourite><span class="favoured">★</span> </p>
+                <p v-else><span>☆</span></p>
+              </div>
               <p class="author note">
                 Written by
                 <span class="author-name" @click="searchPage(uiStore.activePoem.author)">{{ uiStore.activePoem.author ||
                   'Anonymous' }}</span>
-                in <span class="main_category" @click="searchPage(uiStore.activePoem.main_category)">{{ uiStore.activePoem.main_category }}</span>
+                in <span class="main_category" @click="searchPage(uiStore.activePoem.main_category)">{{
+                  uiStore.activePoem.main_category }}</span>
               </p>
 
 
@@ -59,9 +95,9 @@ let cleanText = text
               <div v-if="uiStore.activePoem.categories.length" class="tags note">
                 <p>Categories: </p>
                 <p class="cat_tags">
-                  <div v-for="category in uiStore.activePoem.categories" :key="category">
-                    <span @click="searchPage(category)">{{ category }}</span>
-                  </div>
+                <div v-for="category in uiStore.activePoem.categories" :key="category">
+                  <span @click="searchPage(category)">{{ category }}</span>
+                </div>
                 </p>
               </div>
 
@@ -86,7 +122,7 @@ let cleanText = text
 <style scoped>
 .sidemenuMainWrapper {
   position: fixed;
-  top:0px;
+  top: 0px;
   right: 0px;
   bottom: 0px;
   display: flex;
@@ -94,9 +130,9 @@ let cleanText = text
   align-items: center;
   z-index: 99999;
   width: 100%;
-  padding:var(--defaultSmallPadding);
+  padding: var(--defaultSmallPadding);
   background-color: rgba(0, 0, 0, 0.51);
-  overflow:hidden;
+  overflow: hidden;
 }
 
 .sidemenu {
@@ -110,10 +146,10 @@ let cleanText = text
   justify-content: center;
   align-items: flex-start;
   position: relative;
-  max-height:600px;
-  height:100%;
-  border-radius:20px;
-  padding-right:20px;
+  max-height: 600px;
+  height: 100%;
+  border-radius: 20px;
+  padding-right: 20px;
 
 }
 
@@ -131,7 +167,7 @@ let cleanText = text
   width: 100%;
   padding: var(--defaultMargin);
   padding-right: 0px;
-  padding-top:0px;
+  padding-top: 0px;
   margin-top: 60px;
 }
 
@@ -149,6 +185,15 @@ let cleanText = text
 .poem .content {
   flex-grow: 1;
 
+}
+
+.favourite {
+  cursor: pointer;
+  font-size: 2rem;
+}
+
+.favourite .favoured {
+  color: var(--accentColor);
 }
 
 @media(max-width:595px) {

@@ -9,10 +9,10 @@ defineProps<{}>()
 
 export interface User {
   username: string
-  mail:string
+  mail: string
   createdAt: string
   in_submission: number
-  
+
 }
 
 const poemStore = usePoemStore()
@@ -29,10 +29,10 @@ const formattedJoinedDate = computed(() => {
   if (!dateStr) return ''
 
   const date = new Date(dateStr)
-  
+
   return date.toLocaleDateString('en-GB', {
     day: '2-digit',
-    month: 'short', 
+    month: 'short',
     year: 'numeric'
   })
 })
@@ -44,9 +44,11 @@ async function logout() {
     console.error("Failed to destroy server session:", err);
   } finally {
     userStore.setUser(null);
-     window.location.href = "/";
+    window.location.href = "/";
   }
 }
+
+
 
 </script>
 
@@ -60,6 +62,9 @@ async function logout() {
       <div class="info">
         <p>You have been with us since: {{ formattedJoinedDate }}</p>
         <p>Poems in submission: {{ userStore.user?.in_submission }}</p>
+        <RouterLink to="/favourites">
+          ✒ Click to go to favourite poems
+        </RouterLink>
         <button @click="logout">Log out</button>
       </div>
 
@@ -80,11 +85,11 @@ async function logout() {
 </template>
 
 <style scoped>
-.info button{
-  max-width:fit-content;
+.info button {
+  max-width: fit-content;
 }
 
-.account-wrapper .title{
-  color:var(--defaultLight);
+.account-wrapper .title {
+  color: var(--defaultLight);
 }
 </style>

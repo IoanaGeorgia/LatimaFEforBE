@@ -25,7 +25,7 @@ const symbol = computed(() => {
 </script>
 
 <template>
-  <div class="symbol-wrapper">
+  <div class="symbol-wrapper" :title=props.category>
     <span>
       <div>
         {{ symbol }}

@@ -6,6 +6,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Loader from './Loader.vue';
 import Error from './Error.vue';
+import PoemSymbol from './PoemSymbol.vue';
 
 
 const props = defineProps<{
@@ -85,6 +86,7 @@ watch(
   <div class="page-wrapper">
      <div class="title-wrapper">
       <p class="title">🔍︎ : {{ searchTerm }}</p>
+      <PoemSymbol :category=searchTerm />
     </div>
 
     <Loader v-if="isLoading" />
@@ -122,6 +124,12 @@ watch(
 
 .all-wrapper .masonryWrap .item{
   padding-top:20px;
+}
+
+.title-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap:15px;
 }
 
 .title-wrapper .title{

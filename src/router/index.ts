@@ -53,7 +53,15 @@ const router = createRouter({
       component: () => import('@/components/AddPoem.vue'),
       props: true,
       meta: { requiresAuth: true } 
-    }  ],
+    },
+  
+     {
+      path: '/favourites',
+      name: 'favourites',
+      component: () => import('@/components/Favourites.vue'),
+      meta: { requiresAuth: true } 
+    }
+  ],
 })
 
 
