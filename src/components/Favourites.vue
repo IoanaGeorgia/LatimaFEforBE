@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Poem from './Poem.vue';
-import { onMounted, ref, watch } from 'vue';
+import { getCurrentInstance, nextTick, onMounted, ref, watch } from 'vue';
 import Loader from './Loader.vue';
 import Error from './Error.vue';
 
@@ -13,6 +13,14 @@ export interface Poem {
   tags: string[]
   categories: string[]
 }
+
+const instance = getCurrentInstance();
+const redrawMasonry = () => {
+  nextTick(() => {
+    (instance?.proxy as unknown as { $redrawVueMasonry?: () => void } | null)
+      ?.$redrawVueMasonry?.();
+  });
+};
 
 const searchTerm = ref('');
 const favouritePoems = ref<Poem[]>([]);
@@ -50,6 +58,7 @@ async function fetchFavouritePoems() {
     favouritePoems.value = [];
   } finally {
     isLoading.value = false;
+    redrawMasonry();
   }
 }
 
@@ -58,6 +67,7 @@ function applySearchFilter() {
 
   if (!query) {
     favouritePoems.value = [...favouritePoemsRaw.value];
+    redrawMasonry();
     return;
   }
 
@@ -78,6 +88,8 @@ function applySearchFilter() {
       matchesCategories
     );
   });
+
+  redrawMasonry();
 }
 
 onMounted(() => {
